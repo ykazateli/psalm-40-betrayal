@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Псалом 40: Предательство | Указатели</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', sans-serif;
+            background: #b48a62;
+            background-image: radial-gradient(circle at 10% 20%, rgba(218, 178, 115, 0.08) 0%, rgba(0,0,0,0) 50%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 850px;
+            width: 100%;
+            background: #fff6e8;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(100, 70, 30, 0.15);
+            padding: 30px 30px 40px;
+            border: 1px solid #f0dbb4;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header .studio-link {
+            display: inline-block;
+            font-size: 1rem;
+            color: #4A90D9;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid #4A90D9;
+            padding-bottom: 2px;
+            transition: 0.2s;
+        }
+
+        .header .studio-link:hover {
+            color: #2c6aa0;
+            border-bottom-color: #2c6aa0;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #4a3520;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            color: #7a5a3a;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .screen {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .screen h2 {
+            font-size: 1.5rem;
+            color: #4a3520;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        /* Персонаж */
+        .character-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .character-wrapper img {
+            width: 200px;
+            height: auto;
+            display: block;
+        }
+
+        /* Речь Кристины */
+        .speech-bubble {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px 25px;
+            border: 1px solid #e6dacb;
+            position: relative;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #3e2c1a;
+            text-align: left;
+        }
+
+        .speech-bubble .name {
+            font-weight: 700;
+            color: #b48a62;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Текст Псалма */
+        .psalm-text {
+            font-size: 1.1rem;
+            line-height: 2.4;
+            color: #3e2c1a;
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 20px;
+            border: 1px solid #e6dacb;
+            margin-bottom: 20px;
+        }
+
+        .psalm-text .verse-number {
+            font-size: 0.7rem;
+            color: #b48a62;
+            font-weight: 700;
+            vertical-align: super;
+            margin-right: 4px;
+        }
+
+        .word-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        .clickable-word {
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .clickable-word:hover {
+            background: #e6dacb;
+        }
+
+        .clickable-word.found {
+            color: #8a1a1a;
+            text-decoration: underline;
+            text-decoration-color: #8a1a1a;
+            text-underline-offset: 4px;
+        }
+
+        .word-wrapper .marker {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .word-wrapper .marker.show {
+            opacity: 1;
+        }
+
+        /* Таблица */
+        .nt-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .nt-table th {
+            background: #b48a62;
+            color: #fff;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .nt-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0e6d8;
+            color: #3e2c1a;
+            vertical-align: top;
+        }
+
+        .nt-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .nt-table .word-cell {
+            font-weight: 700;
+            color: #8a1a1a;
+        }
+
+        /* Аккордеон */
+        .accordion {
+            margin-bottom: 20px;
+        }
+
+        .accordion-item {
+            background: #ffffff;
+            border: 1px solid #e6dacb;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #4a3520;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: #f4ede4;
+        }
+
+        .accordion-header .arrow {
+            font-size: 1.2rem;
+            color: #b48a62;
+            transition: transform 0.3s;
+        }
+
+        .accordion-item.open .accordion-header .arrow {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.open .accordion-body {
+            max-height: 500px;
+        }
+
+        .accordion-body-inner {
+            padding: 0 20px 16px;
+            color: #3e2c1a;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            border-top: 1px solid #f0e6d8;
+            padding-top: 12px;
+        }
+
+        .accordion-body-inner .ref {
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: 600;
+            color: #b48a62;
+            font-size: 0.85rem;
+        }
+
+        /* Размышление */
+        .question-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e6dacb;
+            margin-bottom: 20px;
+        }
+
+        .question-box .q {
+            font-weight: 600;
+            color: #4a3520;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .question-box .answer {
+            display: none;
+            margin-top: 10px;
+            padding: 14px 16px;
+            background: #f4ede4;
+            border-radius: 12px;
+            color: #3e2c1a;
+            line-height: 1.6;
+            border-left: 3px solid #b48a62;
+        }
+
+        .question-box .answer.show {
+            display: block;
+        }
+
+        .reveal-btn {
+            background: #b48a62;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .reveal-btn:hover {
+            background: #9a704a;
+            transform: translateY(-2px);
+        }
+
+        /* Вывод */
+        .conclusion-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e6dacb;
+            margin-bottom: 20px;
+        }
+
+        .conclusion-box p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #3e2c1a;
+            margin-bottom: 10px;
+        }
+
+        .conclusion-box .final-verse {
+            font-style: italic;
+            color: #b48a62;
+            margin-top: 10px;
+            padding: 15px;
+            background: #f4ede4;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+
+        /* Кнопки */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons button {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        button {
+            background: #b48a62;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #9a704a;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #d5c4b0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #e6dacb;
+            color: #4a3520;
+        }
+
+        button.secondary:hover {
+            background: #d5c4b0;
+        }
+
+        /* Футер */
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #e6dacb;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .footer .studio-link {
+            color: #4A90D9;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #4A90D9;
+            padding-bottom: 2px;
+        }
+
+        .footer .small-note {
+            display: block;
+            margin-top: 6px;
+            color: #a58d7a;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .app-container { padding: 20px 15px; }
+            .header h1 { font-size: 1.6rem; }
+            .character-wrapper img { width: 150px; }
+            .speech-bubble { font-size: 1rem; padding: 15px 18px; }
+            .psalm-text { font-size: 1rem; padding: 18px 20px; line-height: 2.4; }
+            .word-wrapper .marker { font-size: 1rem; top: -24px; }
+            .nt-table { font-size: 0.8rem; }
+            .nt-table th, .nt-table td { padding: 8px 6px; }
+            .accordion-header { padding: 14px 16px; font-size: 0.95rem; }
+            .accordion-body-inner { padding: 0 16px 14px; }
+            .nav-buttons { flex-direction: column; }
+            button { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ШАПКА -->
+        <div class="header">
+            <a href="https://vk.com/ykazateli_of_christ" target="_blank" class="studio-link">
+                🕯️ Библейская студия анимации «Указатели»
+            </a>
+            <h1>📖 Псалом 40: Предательство</h1>
+            <p class="subtitle">Христос в Псалмах — урок 5</p>
+        </div>
+
+        <!-- ЭКРАН 1: ВСТУПЛЕНИЕ -->
+        <div id="screen1" class="screen active">
+            <div class="character-wrapper">
+                <img src="kristina-bible.gif" alt="Кристина с Библией">
+            </div>
+            <div class="speech-bubble">
+                <span class="name">Кристина:</span>
+                Сегодня — <strong>Псалом 40</strong>. В нём есть пророчество о предательстве. Давай найдём слова, которые на это указывают, а потом посмотрим, как это исполнилось в Евангелии.
+            </div>
+            <div style="text-align:center;">
+                <button onclick="goToStep(2)">📖 Читать Псалом</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 2: НАБЛЮДЕНИЕ -->
+        <div id="screen2" class="screen">
+            <h2>👀 Наблюдение</h2>
+
+            <div class="character-wrapper">
+                <img src="kristina-holding.gif" alt="Кристина говорит">
+            </div>
+            <div class="speech-bubble">
+                <span class="name">Кристина:</span>
+                🔑 Нажми на слова, которые говорят о <strong>предательстве</strong>.<br>
+                Подсказка: их <strong>3</strong>.
+            </div>
+
+            <div class="psalm-text" id="psalmText">
+                <span class="verse-number">8</span> «...между собою против меня, <span class="word-wrapper"><span class="clickable-word">замышляют на меня зло</span><span class="marker">🔪</span></span>»<br><br>
+                <span class="verse-number">10</span> «Даже <span class="word-wrapper"><span class="clickable-word">человек мирный со мною</span><span class="marker">🔪</span></span>, на которого я полагался, который ел хлеб мой, <span class="word-wrapper"><span class="clickable-word">поднял на меня пяту</span><span class="marker">🔪</span></span>»
+            </div>
+
+            <div class="nav-buttons">
+                <button class="secondary" onclick="goToStep(1)">⬅️ Назад</button>
+                <button onclick="goToStep(3)" id="toStep3" disabled>➡️ Дальше</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 3: СВЯЗЬ С НОВЫМ ЗАВЕТОМ -->
+        <div id="screen3" class="screen">
+            <h2>🔗 Связь с Новым Заветом</h2>
+
+            <div class="character-wrapper">
+                <img src="kristina-holding.gif" alt="Кристина говорит">
+            </div>
+            <div class="speech-bubble">
+                <span class="name">Кристина:</span>
+                Отлично! Ты нашёл все слова. А теперь посмотри, как это исполнилось.
+            </div>
+
+            <table class="nt-table">
+                <thead>
+                    <tr>
+                        <th>Псалом 40</th>
+                        <th>Евангелие</th>
+                        <th>Что это значит</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="word-cell">«...между собою против меня, замышляют на меня зло» (ст. 8)</td>
+                        <td>«...положили в совете взять Иисуса хитростью и убить» (Мф. 26:3-4)</td>
+                        <td>Религиозные лидеры замышляют убить Христа</td>
+                    </tr>
+                    <tr>
+                        <td class="word-cell">«человек мирный со мною, на которого я полагался» (ст. 10)</td>
+                        <td>Иуда был рядом с Иисусом, но предал Его (Ин. 13:18)</td>
+                        <td>Близкий друг становится предателем</td>
+                    </tr>
+                    <tr>
+                        <td class="word-cell">«который ел хлеб мой, поднял на меня пяту» (ст. 10)</td>
+                        <td>Иисус сказал: «...ядущий со Мною хлеб поднял на Меня пяту» (Ин. 13:18)</td>
+                        <td>Иисус прямо цитирует этот Псалом об Иуде</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="nav-buttons">
+                <button class="secondary" onclick="goToStep(2)">⬅️ Назад</button>
+                <button onclick="goToStep(4)">➡️ Дальше</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 4: ВЗГЛЯД НА ХРИСТА (Ин. 13) -->
+        <div id="screen4" class="screen">
+            <h2>✝️ Взгляд на Христа</h2>
+
+            <div class="character-wrapper">
+                <img src="jesus-washing-feet.gif" alt="Христос моет ноги">
+            </div>
+            <div class="speech-bubble">
+                <span class="name">Кристина:</span>
+                А теперь давай заглянем в Евангелие от Иоанна, глава 13. Посмотри, как Христос отвечает на предательство.
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>1. Иисус умывает ноги</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            Он показывает любовь и смирение даже тем, кто Его предаст.
+                            <span class="ref">Ин. 13:1-5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>2. Слова Петру</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            «Если не умою тебя, не имеешь части со Мною» — важность предоставить себя Ему.
+                            <span class="ref">Ин. 13:8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>3. Знает предателя</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            Иисус знает, кто предаст Его, и цитирует Псалом 40.
+                            <span class="ref">Ин. 13:18-19</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>4. Хлеб для Иуды</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            Иуда берёт хлеб из рук Иисуса — символ близости и доверия.
+                            <span class="ref">Ин. 13:26</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>5. Иуда уходит</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-body-inner">
+                            Он уходит, чтобы предать — тьма входит в его сердце.
+                            <span class="ref">Ин. 13:30</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="secondary" onclick="goToStep(3)">⬅️ Назад</button>
+                <button onclick="goToStep(5)">➡️ Дальше</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 5: РАЗМЫШЛЕНИЕ -->
+        <div id="screen5" class="screen">
+            <h2>🤔 Размышление</h2>
+
+            <div class="character-wrapper">
+    <img src="kristina-bible.gif" alt="Кристина с Библией">
+</div>
+            <div class="speech-bubble">
+                <span class="name">Кристина:</span>
+                Что ты чувствуешь, видя, как Христос отвечает на предательство?
+            </div>
+
+            <div class="question-box">
+                <div class="q">💭 Подумай и ответь:</div>
+                <div class="answer" id="answerText">
+                    Христос знал, что Иуда предаст Его. Но Он <strong>не перестал любить</strong>. Он умыл ему ноги. Он протянул ему хлеб. Он дал ему шанс до последнего. Это любовь, которая сильнее предательства.
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer()">💡 Показать ответ</button>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="secondary" onclick="goToStep(4)">⬅️ Назад</button>
+                <button onclick="goToStep(6)">➡️ Дальше</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 6: ВЫВОД -->
+        <div id="screen6" class="screen">
+            <h2>🕊️ Вывод</h2>
+
+            <div class="character-wrapper">
+                <img src="kristina-holding.gif" alt="Кристина говорит">
+            </div>
+            <div class="speech-bubble">
+                <span class="name">Кристина:</span>
+                Псалом 40 предсказал предательство. Но Евангелие показывает, что <strong>Христос ответил на него любовью</strong>. Он знал, но не отвернулся. Он любил до конца. И эта любовь — для нас.
+            </div>
+
+            <div class="conclusion-box">
+                <p>
+                    <strong>Главная истина:</strong> Христос знал о предательстве, но ответил любовью — до конца.
+                </p>
+                <div class="final-verse">
+                    «...возлюбив Своих, сущих в мире, до конца возлюбил их»<br>
+                    <span style="font-style: normal; font-weight: 600; color: #4a3520;">— Иоанна 13:1</span>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="secondary" onclick="goToStep(5)">⬅️ Назад</button>
+                <button class="secondary" onclick="resetAll()">🔄 Пройти заново</button>
+                <a href="https://ykazateli.github.io/psalm-109-priest-forever/" style="text-decoration: none; flex: 1; min-width: 140px;">
+                    <button style="width: 100%;">➡️ К Псалму 109</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- ФУТЕР -->
+        <div class="footer">
+            <a href="https://vk.com/ykazateli_of_christ" target="_blank" class="studio-link">
+                🕯️ Исследуйте Писание вместе с «Указателями»
+            </a>
+            <span class="small-note">Серия «Христос в Псалмах» — урок 6</span>
+        </div>
+    </div>
+
+    <script>
+        // ============ ОТМЕТКА СЛОВ ============
+        const clickableWords = document.querySelectorAll('.clickable-word');
+        const toStep3Btn = document.getElementById('toStep3');
+        let markedCount = 0;
+        const totalWords = 3;
+
+        clickableWords.forEach(word => {
+            word.addEventListener('click', function() {
+                const wrapper = this.parentElement;
+                const marker = wrapper.querySelector('.marker');
+
+                if (this.classList.contains('found')) {
+                    this.classList.remove('found');
+                    marker.classList.remove('show');
+                    markedCount--;
+                } else {
+                    this.classList.add('found');
+                    marker.classList.add('show');
+                    markedCount++;
+                }
+
+                if (markedCount === totalWords) {
+                    toStep3Btn.disabled = false;
+                } else {
+                    toStep3Btn.disabled = true;
+                }
+            });
+        });
+
+        // ============ АККОРДЕОН ============
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('open');
+        }
+
+        // ============ РАЗМЫШЛЕНИЕ ============
+        let answerVisible = false;
+
+        function toggleAnswer() {
+            const answer = document.getElementById('answerText');
+            const btn = document.querySelector('.reveal-btn');
+
+            if (!answerVisible) {
+                answer.classList.add('show');
+                btn.textContent = '🙈 Скрыть ответ';
+                answerVisible = true;
+            } else {
+                answer.classList.remove('show');
+                btn.textContent = '💡 Показать ответ';
+                answerVisible = false;
+            }
+        }
+
+        // ============ НАВИГАЦИЯ ============
+        function goToStep(stepNumber) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById('screen' + stepNumber).classList.add('active');
+            document.querySelector('.app-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetAll() {
+            clickableWords.forEach(word => {
+                word.classList.remove('found');
+                const marker = word.parentElement.querySelector('.marker');
+                if (marker) marker.classList.remove('show');
+            });
+            markedCount = 0;
+            toStep3Btn.disabled = true;
+
+            // Закрываем все аккордеоны
+            document.querySelectorAll('.accordion-item').forEach(item => item.classList.remove('open'));
+
+            if (answerVisible) {
+                toggleAnswer();
+            }
+
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
